@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>pawtw 寵物美學工作室 | 溫馨夢幻毛孩照護</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Noto Sans TC & Quicksand -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        pink: {
+                            50: '#fff5f7',
+                            100: '#ffe3ec',
+                            200: '#ffcce0',
+                            300: '#ffa8cb',
+                            400: '#ff75ab',
+                            500: '#f9458b',
+                            600: '#e6246e',
+                        },
+                        dreamy: {
+                            cream: '#fffaf8',
+                            rose: '#fce4ec',
+                            lavender: '#f3e5f5',
+                            gold: '#f7d6c8',
+                            dark: '#5a3d46',
+                            text: '#6d4c57'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Quicksand', 'Noto Sans TC', 'sans-serif'],
+                    },
+                    boxShadow: {
+                        'dreamy': '0 10px 30px -5px rgba(255, 182, 193, 0.4)',
+                        'soft': '0 4px 20px -2px rgba(249, 69, 139, 0.15)',
+                        'glow': '0 0 15px rgba(255, 168, 203, 0.6)'
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background: linear-gradient(135deg, #fff5f7 0%, #ffe3ec 50%, #f3e5f5 100%);
+            background-attachment: fixed;
+            color: #6d4c57;
+            overflow-x: hidden;
+        }
+
+        /* 飄落羽毛動畫效果 */
+        .feather-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .feather {
+            position: absolute;
+            background: radial-gradient(circle, rgba(255,255,255,0.9) 0%, rgba(255,227,236,0.6) 100%);
+            border-radius: 50% 0 50% 50%;
+            filter: blur(1px);
+            animation: floatDown linear infinite;
+        }
+
+        @keyframes floatDown {
+            0% {
+                transform: translateY(-10vh) rotate(0deg) scale(0.6);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.8;
+            }
+            90% {
+                opacity: 0.6;
+            }
+            100% {
+                transform: translateY(105vh) rotate(360deg) scale(1);
+                opacity: 0;
+            }
+        }
+
+        /* 玻璃擬態效果 */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.65);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+        }
+
+        .glass-nav {
+            background: rgba(255, 245, 247, 0.85);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 227, 236, 0.6);
+        }
+
+        /* 平滑滾動 */
+        html {
+            scroll-behavior: smooth;
+        }
+    </style>
+</head>
+<body class="font-sans antialiased">
+
+    <!-- 飄落羽毛背景層 -->
+    <div class="feather-container" id="featherContainer"></div>
+
+    <!-- 頂部導覽列 -->
+    <header class="fixed top-0 left-0 right-0 z-50 glass-nav transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <!-- Logo -->
+                <a href="#" class="flex items-center gap-3 group">
+                    <div class="w-12 h-12 rounded-full bg-gradient-to-tr from-pink-300 to-pink-100 flex items-center justify-center shadow-md group-hover:scale-105 transition-transform duration-300">
+                        <i class="fa-solid font-feather text-pink-500 text-xl"><i class="fa-solid fa-feather-pointed"></i></i>
+                    </div>
+                    <div>
+                        <span class="text-2xl font-bold tracking-wider text-pink-500 font-sans">pawtw</span>
+                        <span class="block text-xs text-pink-400 tracking-widest">Pet Aesthetic Studio</span>
+                    </div>
+                </a>
+
+                <!-- 電腦版選單 -->
+                <nav class="hidden md:flex items-center space-x-8 font-medium text-dreamy-dark">
+                    <a href="#about" class="hover:text-pink-500 transition-colors">關於我們</a>
+                    <a href="#services" class="hover:text-pink-500 transition-colors">服務項目</a>
+                    <a href="#pricing" class="hover:text-pink-500 transition-colors">夢幻價目表</a>
+                    <a href="#calculator" class="hover:text-pink-500 transition-colors">健康換算器</a>
+                    <a href="#health-tips" class="hover:text-pink-500 transition-colors">寵物衛教</a>
+                    <a href="#contact" class="bg-gradient-to-r from-pink-400 to-pink-300 text-white px-5 py-2.5 rounded-full shadow-soft hover:shadow-dreamy hover:opacity-90 transition-all duration-300">預約聯繫</a>
+                </nav>
+
+                <!-- 手機版選單按鈕 -->
+                <div class="md:hidden flex items-center">
+                    <button id="mobileMenuBtn" class="text-dreamy-dark hover:text-pink-500 focus:outline-none p-2" aria-label="開關選單">
+                        <i class="fa-solid fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 手機版下拉選單 -->
+        <div id="mobileMenu" class="hidden md:hidden glass-card border-t border-pink-100 px-4 pt-2 pb-6 space-y-3">
+            <a href="#about" class="block px-3 py-2 rounded-md hover:bg-pink-100/50 text-dreamy-dark">關於我們</a>
+            <a href="#services" class="block px-3 py-2 rounded-md hover:bg-pink-100/50 text-dreamy-dark">服務項目</a>
+            <a href="#pricing" class="block px-3 py-2 rounded-md hover:bg-pink-100/50 text-dreamy-dark">夢幻價目表</a>
+            <a href="#calculator" class="block px-3 py-2 rounded-md hover:bg-pink-100/50 text-dreamy-dark">健康換算器</a>
+            <a href="#health-tips" class="block px-3 py-2 rounded-md hover:bg-pink-100/50 text-dreamy-dark">寵物衛教</a>
+            <a href="#contact" class="block text-center bg-gradient-to-r from-pink-400 to-pink-300 text-white py-2.5 rounded-full shadow-soft font-medium">預約聯繫</a>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="relative z-10 pt-20">
+
+        <!-- 英雄 Banner 區塊 -->
+        <section class="min-h-[85vh] flex items-center justify-center relative px-4 sm:px-6 lg:px-8 py-16">
+            <div class="max-w-5xl mx-auto text-center space-y-8">
+                <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-card text-pink-500 font-medium text-sm shadow-sm animate-bounce">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+                    <span>給毛孩如羽毛般輕柔溫暖的呵護</span>
+                </div>
+                
+                <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight text-dreamy-dark leading-tight">
+                    溫馨夢幻寵物美學 <br>
+                    <span class="bg-clip-text text-transparent bg-gradient-to-r from-pink-500 via-pink-400 to-purple-400">
+                        陪伴牠們最浪漫的童話時光
+                    </span>
+                </h1>
+
+                <p class="max-w-2xl mx-auto text-lg sm:text-xl text-dreamy-text leading-relaxed">
+                    在 <span class="font-bold text-pink-500">pawtw</span>，我們用如羽毛般細緻的愛，為每隻毛孩帶來極致舒適的美容體驗、傾聽溝通與陪伴成長。
+                </p>
+
+                <div class="flex flex-col sm:flex-row gap-4 justify-center items-center pt-4">
+                    <a href="#calculator" class="w-full sm:w-auto px-8 py-4 rounded-full bg-gradient-to-r from-pink-400 to-pink-500 text-white font-bold shadow-dreamy hover:scale-105 transition-all duration-300 flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-calculator"></i> 算算毛孩年齡與 BMI
+                    </a>
+                    <a href="#services" class="w-full sm:w-auto px-8 py-4 rounded-full glass-card text-dreamy-dark hover:text-pink-500 font-bold border border-pink-200 shadow-sm hover:scale-105 transition-all duration-300 flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-paw"></i> 探索夢幻服務
+                    </a>
+                </div>
+
+                <!-- 飾品小裝飾 -->
+                <div class="pt-12 grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
+                    <div class="glass-card p-4 rounded-2xl shadow-sm text-center">
+                        <i class="fa-solid fa-heart text-pink-400 text-2xl mb-1"></i>
+                        <div class="font-bold text-dreamy-dark">溫馨親和力</div>
+                        <div class="text-xs text-gray-500">耐心照顧零壓力</div>
+                    </div>
+                    <div class="glass-card p-4 rounded-2xl shadow-sm text-center">
+                        <i class="fa-solid fa-spa text-pink-400 text-2xl mb-1"></i>
+                        <div class="font-bold text-dreamy-dark">羽柔頂級洗護</div>
+                        <div class="text-xs text-gray-500">天然低敏草本配方</div>
+                    </div>
+                    <div class="glass-card p-4 rounded-2xl shadow-sm text-center">
+                        <i class="fa-solid fa-camera-retro text-pink-400 text-2xl mb-1"></i>
+                        <div class="font-bold text-dreamy-dark">夢幻光影寫真</div>
+                        <div class="text-xs text-gray-500">捕捉最純真瞬間</div>
+                    </div>
+                    <div class="glass-card p-4 rounded-2xl shadow-sm text-center">
+                        <i class="fa-solid fa-comments text-pink-400 text-2xl mb-1"></i>
+                        <div class="font-bold text-dreamy-dark">心靈深度溝通</div>
+                        <div class="text-xs text-gray-500">搭起心與心的橋樑</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 關於我們 區塊 -->
+        <section id="about" class="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+            <div class="glass-card rounded-3xl p-8 sm:p-12 shadow-dreamy relative overflow-hidden">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                    <div class="space-y-6">
+                        <div class="inline-block px-4 py-1.5 rounded-full bg-pink-100 text-pink-500 font-medium text-sm">
+                            <i class="fa-solid fa-feather"></i> About pawtw
+                        </div>
+                        <h2 class="text-3xl sm:text-4xl font-bold text-dreamy-dark leading-snug">
+                            打造讓毛孩感到放鬆與愛的 <br>
+                            <span class="text-pink-500">夢幻溫馨粉色城堡</span>
+                        </h2>
+                        <p class="text-dreamy-text leading-relaxed">
+                            <strong class="text-pink-500">pawtw</strong> 誕生於對毛孩無限的愛與細膩的心。我們相信每一次的剪裁、洗沐、訓練與溝通，都應該是一段充滿羽毛般輕柔與溫暖的記憶。
+                        </p>
+                        <p class="text-dreamy-text leading-relaxed">
+                            位於美麗古都台南，我們摒棄傳統緊張嚴肅的寵物美容環境，打造以柔和粉色調與放鬆香氛圍繞的空間，給予牠們頂級夢幻的寵愛體驗。
+                        </p>
+                        <div class="flex items-center gap-6 pt-4">
+                            <div class="flex items-center gap-2 text-dreamy-dark font-bold">
+                                <i class="fa-solid fa-shield-heart text-pink-400 text-xl"></i>
+                                <span>100% 正向照護</span>
+                            </div>
+                            <div class="flex items-center gap-2 text-dreamy-dark font-bold">
+                                <i class="fa-solid fa-certificate text-pink-400 text-xl"></i>
+                                <span>專業認證團隊</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 形象模擬圖框 -->
+                    <div class="relative">
+                        <div class="w-full h-80 sm:h-96 rounded-2xl bg-gradient-to-tr from-pink-200 via-pink-100 to-white flex items-center justify-center p-6 shadow-inner border-4 border-white relative overflow-hidden group">
+                            <div class="text-center space-y-4">
+                                <i class="fa-solid fa-dog text-6xl text-pink-300 group-hover:scale-110 transition-transform duration-300"></i>
+                                <i class="fa-solid fa-cat text-5xl text-pink-300 ml-4 group-hover:scale-110 transition-transform duration-300"></i>
+                                <div class="text-pink-400 font-bold text-xl">Warm & Dreamy Sanctuary</div>
+                                <p class="text-xs text-pink-300">給予寶貝羽毛般極致呵護的夢幻殿堂</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 服務項目 區塊 -->
+        <section id="services" class="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+            <div class="text-center space-y-4 mb-16">
+                <span class="px-4 py-1.5 rounded-full bg-pink-100 text-pink-500 font-medium text-sm">
+                    <i class="fa-solid fa-sparkles"></i> Our Services
+                </span>
+                <h2 class="text-3xl sm:text-4xl font-bold text-dreamy-dark">工作室核心服務</h2>
+                <p class="text-dreamy-text max-w-xl mx-auto">全方位的專業照顧，從外在修剪毛髮到內在心靈溝通，細心呵護每一處細節。</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <!-- 服務 1 -->
+                <div class="glass-card rounded-3xl p-6 shadow-soft hover:shadow-dreamy transition-all duration-300 transform hover:-translate-y-2 border border-pink-100 flex flex-col justify-between">
+                    <div>
+                        <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-pink-300 to-pink-100 flex items-center justify-center text-pink-500 text-2xl mb-6 shadow-sm">
+                            <i class="fa-solid fa-scissors"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-dreamy-dark mb-3">基礎美容</h3>
+                        <p class="text-dreamy-text text-sm leading-relaxed mb-4">
+                            使用溫柔羽柔SPA洗沐配方、低噪音吹理、指甲修剪與耳道清潔，讓毛孩的毛髮蓬鬆如柔羽般順滑。
+                        </p>
+                    </div>
+                    <ul class="text-xs text-pink-500 space-y-2 font-medium border-t border-pink-100 pt-4">
+                        <li><i class="fa-solid fa-check mr-2"></i>低敏有機草本洗劑</li>
+                        <li><i class="fa-solid fa-check mr-2"></i>細心防緊張減敏洗護</li>
+                    </ul>
+                </div>
+
+                <!-- 服務 2 -->
+                <div class="glass-card rounded-3xl p-6 shadow-soft hover:shadow-dreamy transition-all duration-300 transform hover:-translate-y-2 border border-pink-100 flex flex-col justify-between">
+                    <div>
+                        <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-pink-300 to-pink-100 flex items-center justify-center text-pink-500 text-2xl mb-6 shadow-sm">
+                            <i class="fa-solid fa-award"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-dreamy-dark mb-3">服從訓練</h3>
+                        <p class="text-dreamy-text text-sm leading-relaxed mb-4">
+                            採用 100% 正向獎勵引導，協助建立良好生活習慣、響片訓練與社交禮儀，打造與主人最默契的甜美關係。
+                        </p>
+                    </div>
+                    <ul class="text-xs text-pink-500 space-y-2 font-medium border-t border-pink-100 pt-4">
+                        <li><i class="fa-solid fa-check mr-2"></i>一對一專屬教練課程</li>
+                        <li><i class="fa-solid fa-check mr-2"></i>客製化家庭行為矯正</li>
+                    </ul>
+                </div>
+
+                <!-- 服務 3 -->
+                <div class="glass-card rounded-3xl p-6 shadow-soft hover:shadow-dreamy transition-all duration-300 transform hover:-translate-y-2 border border-pink-100 flex flex-col justify-between">
+                    <div>
+                        <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-pink-300 to-pink-100 flex items-center justify-center text-pink-500 text-2xl mb-6 shadow-sm">
+                            <i class="fa-solid fa-camera"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-dreamy-dark mb-3">寵物攝影</h3>
+                        <p class="text-dreamy-text text-sm leading-relaxed mb-4">
+                            溫馨夢幻棚拍與自然光外拍，專業攝影師紀錄毛孩最自然、呆萌與靈動的一瞬間，珍藏一輩子的回憶。
+                        </p>
+                    </div>
+                    <ul class="text-xs text-pink-500 space-y-2 font-medium border-t border-pink-100 pt-4">
+                        <li><i class="fa-solid fa-check mr-2"></i>夢幻粉色道具場景</li>
+                        <li><i class="fa-solid fa-check mr-2"></i>精修電子檔與寫真卡</li>
+                    </ul>
+                </div>
+
+                <!-- 服務 4 -->
+                <div class="glass-card rounded-3xl p-6 shadow-soft hover:shadow-dreamy transition-all duration-300 transform hover:-translate-y-2 border border-pink-100 flex flex-col justify-between">
+                    <div>
+                        <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-pink-300 to-pink-100 flex items-center justify-center text-pink-500 text-2xl mb-6 shadow-sm">
+                            <i class="fa-solid fa-heart-pulse"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-dreamy-dark mb-3">寵物溝通</h3>
+                        <p class="text-dreamy-text text-sm leading-relaxed mb-4">
+                            透過直覺心靈連結，深入了解毛孩的心中想法、身體舒適度與情感需求，化解行為誤會，加深情感羈絆。
+                        </p>
+                    </div>
+                    <ul class="text-xs text-pink-500 space-y-2 font-medium border-t border-pink-100 pt-4">
+                        <li><i class="fa-solid fa-check mr-2"></i>現場面對面 / 線上諮詢</li>
+                        <li><i class="fa-solid fa-check mr-2"></i>單題解答或深度會談</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- 價目表 區塊 (符合工作室主題) -->
+        <section id="pricing" class="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+            <div class="text-center space-y-4 mb-16">
+                <span class="px-4 py-1.5 rounded-full bg-pink-100 text-pink-500 font-medium text-sm">
+                    <i class="fa-solid fa-heart"></i> Transparent Pricing
+                </span>
+                <h2 class="text-3xl sm:text-4xl font-bold text-dreamy-dark">夢幻服務價目表</h2>
+                <p class="text-dreamy-text max-w-xl mx-auto">價格公開透明，給予毛孩頂級享受與極致呵護</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- 剪指甲與洗澡 -->
+                <div class="glass-card rounded-3xl p-8 shadow-dreamy border border-pink-200 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-24 h-24 bg-pink-100 rounded-bl-full opacity-50 -z-10"></div>
+                    <div class="flex items-center gap-3 mb-6">
+                        <i class="fa-solid fa-shower text-2xl text-pink-500"></i>
+                        <h3 class="text-2xl font-bold text-dreamy-dark">基礎美容與洗沐</h3>
+                    </div>
+
+                    <div class="space-y-6">
+                        <!-- 剪指甲 -->
+                        <div class="bg-white/60 p-4 rounded-2xl border border-pink-100">
+                            <h4 class="font-bold text-pink-500 mb-3 flex justify-between items-center">
+                                <span>寵物剪指甲</span>
+                                <i class="fa-solid fa-hand-holding-heart text-xs"></i>
+                            </h4>
+                            <div class="space-y-2 text-sm">
+                                <div class="flex justify-between border-b border-pink-50 pb-1">
+                                    <span class="text-dreamy-text">大型犬/貓</span>
+                                    <span class="font-bold text-dreamy-dark">NT$ 150</span>
+                                </div>
+                                <div class="flex justify-between border-b border-pink-50 pb-1">
+                                    <span class="text-dreamy-text">中型犬/貓</span>
+                                    <span class="font-bold text-dreamy-dark">NT$ 100</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-dreamy-text">小型犬/貓</span>
+                                    <span class="font-bold text-dreamy-dark">NT$ 50</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 洗澡 -->
+                        <div class="bg-white/60 p-4 rounded-2xl border border-pink-100">
+                            <h4 class="font-bold text-pink-500 mb-3 flex justify-between items-center">
+                                <span>寵物洗澡 SPA</span>
+                                <i class="fa-solid fa-soap text-xs"></i>
+                            </h4>
+                            <div class="space-y-2 text-sm">
+                                <div class="flex justify-between border-b border-pink-50 pb-1">
+                                    <span class="text-dreamy-text">大型犬/貓</span>
+                                    <span class="font-bold text-dreamy-dark">NT$ 1,500</span>
+                                </div>
+                                <div class="flex justify-between border-b border-pink-50 pb-1">
+                                    <span class="text-dreamy-text">中型犬/貓</span>
+                                    <span class="font-bold text-dreamy-dark">NT$ 1,200</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-dreamy-text">小型犬/貓</span>
+                                    <span class="font-bold text-dreamy-dark">NT$ 700</span>
+                                </div>
+                            </div>
+                            <p class="text-xs text-pink-400 mt-3 italic">*洗澡價格將依毛髮長度與打結程度微幅調整</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 服從訓練與攝影 -->
+                <div class="glass-card rounded-3xl p-8 shadow-dreamy border border-pink-200 relative overflow-hidden">
+                    <div class="flex items-center gap-3 mb-6">
+                        <i class="fa-solid fa-graduation-cap text-2xl text-pink-500"></i>
+                        <h3 class="text-2xl font-bold text-dreamy-dark">訓練與寫真攝影</h3>
+                    </div>
+
+                    <div class="space-y-6">
+                        <!-- 服從訓練 -->
+                        <div class="bg-white/60 p-4 rounded-2xl border border-pink-100">
+                            <h4 class="font-bold text-pink-500 mb-3 flex justify-between items-center">
+                                <span>寵物服從訓練</span>
+                                <i class="fa-solid fa-bone text-xs"></i>
+                            </h4>
+                            <div class="space-y-3 text-sm">
+                                <div class="flex justify-between items-center border-b border-pink-50 pb-2">
+                                    <div>
+                                        <div class="font-medium text-dreamy-dark">單堂體驗課程</div>
+                                        <div class="text-xs text-gray-500">1 小時一對一引導</div>
+                                    </div>
+                                    <span class="font-bold text-pink-500 text-lg">NT$ 1,500</span>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <div>
+                                        <div class="font-medium text-dreamy-dark">一個月包月養成專案</div>
+                                        <div class="text-xs text-pink-400">含 15 堂課 (超值優惠)</div>
+                                    </div>
+                                    <span class="font-bold text-pink-500 text-lg">NT$ 20,000</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 寵物攝影 -->
+                        <div class="bg-white/60 p-4 rounded-2xl border border-pink-100">
+                            <h4 class="font-bold text-pink-500 mb-3 flex justify-between items-center">
+                                <span>寵物夢幻攝影</span>
+                                <i class="fa-solid fa-camera-retro text-xs"></i>
+                            </h4>
+                            <div class="flex justify-between items-center">
+                                <span class="text-sm text-dreamy-text">精緻寫真方案 (棚拍/外拍)</span>
+                                <span class="font-bold text-dreamy-dark">NT$ 1,000 - 2,500</span>
+                            </div>
+                            <p class="text-xs text-gray-500 mt-2">依選擇場景、道具與精修照片張數調整費用。</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 寵物溝通與方案訂製 -->
+                <div class="glass-card rounded-3xl p-8 shadow-dreamy border border-pink-200 relative overflow-hidden flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center gap-3 mb-6">
+                            <i class="fa-solid fa-comments text-2xl text-pink-500"></i>
+                            <h3 class="text-2xl font-bold text-dreamy-dark">心靈溝通與諮詢</h3>
+                        </div>
+
+                        <div class="bg-white/60 p-4 rounded-2xl border border-pink-100 mb-6">
+                            <h4 class="font-bold text-pink-500 mb-3 flex justify-between items-center">
+                                <span>寵物溝通諮詢</span>
+                                <i class="fa-solid fa-feather-pointed text-xs"></i>
+                            </h4>
+                            <div class="flex justify-between items-center">
+                                <div>
+                                    <div class="font-medium text-dreamy-dark">精準問答服務</div>
+                                    <div class="text-xs text-gray-500">單一問題深度傾聽</div>
+                                </div>
+                                <span class="font-bold text-pink-500 text-xl">NT$ 100 <span class="text-xs font-normal text-gray-500">/ 問題</span></span>
+                            </div>
+                        </div>
+
+                        <div class="p-4 rounded-2xl bg-gradient-to-r from-pink-100 to-pink-50 border border-pink-200">
+                            <div class="font-bold text-pink-500 text-sm mb-1"><i class="fa-solid fa-gift mr-1"></i> 溫馨貼心小提醒</div>
+                            <p class="text-xs text-dreamy-text leading-relaxed">
+                                工作室提供預約制服務，如需多項組合體驗（如洗澡+攝影組合包），歡迎隨時聯繫我們索取專屬優惠方案！
+                            </p>
+                        </div>
+                    </div>
+
+                    <a href="#contact" class="w-full mt-6 py-3 rounded-xl bg-pink-400 hover:bg-pink-500 text-white font-bold text-center shadow-soft hover:shadow-dreamy transition-all duration-300 block">
+                        立即預約體驗
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- 換算功能 區塊 (年齡換算器 & BMI 計算器) -->
+        <section id="calculator" class="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+            <div class="text-center space-y-4 mb-16">
+                <span class="px-4 py-1.5 rounded-full bg-pink-100 text-pink-500 font-medium text-sm">
+                    <i class="fa-solid fa-calculator"></i> Interactive Tools
+                </span>
+                <h2 class="text-3xl sm:text-4xl font-bold text-dreamy-dark">寵物健康換算小工具</h2>
+                <p class="text-dreamy-text max-w-xl mx-auto">快來算算家中的毛寶貝相當於人類幾歲，以及體重是否符合健康標準吧！</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+
+                <!-- 1. 年齡換算器 -->
+                <div class="glass-card rounded-3xl p-8 shadow-dreamy border border-pink-200">
+                    <div class="flex items-center gap-3 mb-6">
+                        <div class="w-10 h-10 rounded-full bg-pink-400 text-white flex items-center justify-center font-bold">1</div>
+                        <h3 class="text-2xl font-bold text-dreamy-dark">寵物人類年齡換算器</h3>
+                    </div>
+
+                    <form id="ageForm" class="space-y-5" onsubmit="event.preventDefault(); calculateAge();">
+                        <div>
+                            <label class="block text-sm font-bold text-dreamy-dark mb-2">選擇毛孩種類</label>
+                            <div class="grid grid-cols-2 gap-4">
+                                <label class="cursor-pointer border-2 border-pink-200 rounded-2xl p-3 flex items-center justify-center gap-2 hover:bg-pink-50 transition-colors has-[:checked]:border-pink-500 has-[:checked]:bg-pink-100">
+                                    <input type="radio" name="petType" value="dog" checked class="accent-pink-500">
+                                    <i class="fa-solid fa-dog text-pink-500"></i>
+                                    <span class="font-medium text-dreamy-dark">狗狗 Dog</span>
+                                </label>
+                                <label class="cursor-pointer border-2 border-pink-200 rounded-2xl p-3 flex items-center justify-center gap-2 hover:bg-pink-50 transition-colors has-[:checked]:border-pink-500 has-[:checked]:bg-pink-100">
+                                    <input type="radio" name="petType" value="cat" class="accent-pink-500">
+                                    <i class="fa-solid fa-cat text-pink-500"></i>
+                                    <span class="font-medium text-dreamy-dark">貓咪 Cat</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="petAge" class="block text-sm font-bold text-dreamy-dark mb-2">毛孩實際年齡 (歲)</label>
+                            <input type="number" id="petAge" min="0.1" max="30" step="0.5" value="3" required class="w-full px-4 py-3 rounded-2xl border border-pink-200 focus:outline-none focus:ring-2 focus:ring-pink-400 text-dreamy-dark font-medium bg-white/80">
+                        </div>
+
+                        <button type="button" onclick="calculateAge()" class="w-full py-3.5 rounded-2xl bg-gradient-to-r from-pink-400 to-pink-500 text-white font-bold shadow-soft hover:shadow-dreamy transition-all duration-300">
+                            計算相當於人類幾歲
+                        </button>
+                    </form>
+
+                    <!-- 年齡換算結果呈現區 -->
+                    <div id="ageResult" class="mt-6 p-6 rounded-2xl bg-gradient-to-tr from-pink-100 to-white border border-pink-200 text-center hidden">
+                        <span class="text-xs font-bold text-pink-400 uppercase tracking-widest">Calculated Result</span>
+                        <div class="text-3xl font-extrabold text-dreamy-dark mt-2 mb-1">
+                            相當於人類 <span id="humanAgeOutput" class="text-pink-500 text-4xl">28</span> 歲
+                        </div>
+                        <p id="ageAdvice" class="text-xs text-dreamy-text">正是精力充沛、活潑好動的黃金青壯年期呢！</p>
+                    </div>
+                </div>
+
+                <!-- 2. BMI / 健康指數計算器 -->
+                <div class="glass-card rounded-3xl p-8 shadow-dreamy border border-pink-200">
+                    <div class="flex items-center gap-3 mb-6">
+                        <div class="w-10 h-10 rounded-full bg-pink-400 text-white flex items-center justify-center font-bold">2</div>
+                        <h3 class="text-2xl font-bold text-dreamy-dark">寵物 BMI 健康指數計算</h3>
+                    </div>
+
+                    <form id="bmiForm" class="space-y-5" onsubmit="event.preventDefault(); calculateBMI();">
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label for="petLength" class="block text-sm font-bold text-dreamy-dark mb-2">身全身長 (cm)</label>
+                                <input type="number" id="petLength" min="10" max="200" step="1" placeholder="例: 45" required class="w-full px-4 py-3 rounded-2xl border border-pink-200 focus:outline-none focus:ring-2 focus:ring-pink-400 text-dreamy-dark font-medium bg-white/80">
+                            </div>
+                            <div>
+                                <label for="petWeight" class="block text-sm font-bold text-dreamy-dark mb-2">目前體重 (kg)</label>
+                                <input type="number" id="petWeight" min="0.5" max="100" step="0.1" placeholder="例: 5.5" required class="w-full px-4 py-3 rounded-2xl border border-pink-200 focus:outline-none focus:ring-2 focus:ring-pink-400 text-dreamy-dark font-medium bg-white/80">
+                            </div>
+                        </div>
+
+                        <div class="text-xs text-gray-500">
+                            *註：體長測量方式為從項圈位置至尾巴根部的長度。
+                        </div>
+
+                        <button type="button" onclick="calculateBMI()" class="w-full py-3.5 rounded-2xl bg-gradient-to-r from-pink-400 to-pink-500 text-white font-bold shadow-soft hover:shadow-dreamy transition-all duration-300">
+                            計算體型 BMI 指數
+                        </button>
+                    </form>
+
+                    <!-- BMI 換算結果呈現區 -->
+                    <div id="bmiResult" class="mt-6 p-6 rounded-2xl bg-gradient-to-tr from-pink-100 to-white border border-pink-200 text-center hidden">
+                        <span class="text-xs font-bold text-pink-400 uppercase tracking-widest">Health Status</span>
+                        <div class="text-2xl font-extrabold text-dreamy-dark mt-2">
+                            BMI 指數：<span id="bmiScore" class="text-pink-500 text-3xl">22.4</span>
+                        </div>
+                        <div id="bmiStatusBadge" class="inline-block px-3 py-1 rounded-full text-xs font-bold mt-2 mb-2 bg-emerald-100 text-emerald-600">
+                            體型標準健康
+                        </div>
+                        <p id="bmiAdvice" class="text-xs text-dreamy-text">狀態非常棒！請繼續保持均衡飲食與定時運動習慣喔！</p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- 寵物衛教 區塊 (3則符合工作室主題的溫馨小知識) -->
+        <section id="health-tips" class="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+            <div class="text-center space-y-4 mb-16">
+                <span class="px-4 py-1.5 rounded-full bg-pink-100 text-pink-500 font-medium text-sm">
+                    <i class="fa-solid fa-book-open"></i> Care Tips
+                </span>
+                <h2 class="text-3xl sm:text-4xl font-bold text-dreamy-dark">夢幻溫馨衛教小知識</h2>
+                <p class="text-dreamy-text max-w-xl mx-auto">學習如何更好地照顧毛孩，給予牠們最溫柔舒適的生活體驗。</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- 衛教 1 -->
+                <article class="glass-card rounded-3xl overflow-hidden shadow-soft hover:shadow-dreamy transition-all duration-300 flex flex-col">
+                    <div class="h-48 bg-gradient-to-r from-pink-300 via-pink-200 to-purple-200 flex items-center justify-center relative">
+                        <i class="fa-solid fa-feather text-6xl text-white/80"></i>
+                        <span class="absolute bottom-3 left-4 bg-white/80 backdrop-blur-sm text-pink-500 text-xs font-bold px-3 py-1 rounded-full">毛髮理療</span>
+                    </div>
+                    <div class="p-6 flex-1 flex flex-col justify-between">
+                        <div class="space-y-3">
+                            <h3 class="text-xl font-bold text-dreamy-dark">1. 夢幻羽毛般的柔順毛髮護理秘訣</h3>
+                            <p class="text-sm text-dreamy-text leading-relaxed">
+                                想讓寶貝的毛髮像輕柔羽毛般絲滑嗎？每天花5-10分鐘順著毛流梳理，能促進皮膚血液循環。梳毛不僅能預防打結，更是增進主僕情感的最溫馨時光！
+                            </p>
+                        </div>
+                        <div class="pt-4 border-t border-pink-100 mt-4 text-xs font-semibold text-pink-400">
+                            💡 小撇步：洗澡後務必澈底吹乾底層毛，預防皮膚潮濕發炎。
+                        </div>
+                    </div>
+                </article>
+
+                <!-- 衛教 2 -->
+                <article class="glass-card rounded-3xl overflow-hidden shadow-soft hover:shadow-dreamy transition-all duration-300 flex flex-col">
+                    <div class="h-48 bg-gradient-to-r from-pink-200 via-purple-200 to-pink-300 flex items-center justify-center relative">
+                        <i class="fa-solid fa-heart-circle-check text-6xl text-white/80"></i>
+                        <span class="absolute bottom-3 left-4 bg-white/80 backdrop-blur-sm text-pink-500 text-xs font-bold px-3 py-1 rounded-full">正向訓練</span>
+                    </div>
+                    <div class="p-6 flex-1 flex flex-col justify-between">
+                        <div class="space-y-3">
+                            <h3 class="text-xl font-bold text-dreamy-dark">2. 溫馨訓練互動：愛與獎勵的引導學</h3>
+                            <p class="text-sm text-dreamy-text leading-relaxed">
+                                服從訓練不該是嚴厲指令，而是與毛孩建立默契的遊戲！採用「正向強化法」，當毛孩做對時立刻給予讚美與小零食，能讓牠們在充滿愛與自信的環境下快樂學習。
+                            </p>
+                        </div>
+                        <div class="pt-4 border-t border-pink-100 mt-4 text-xs font-semibold text-pink-400">
+                            💡 小撇步：訓練時間不宜過長，每次5-10分鐘保持新鮮感最有效。
+                        </div>
+                    </div>
+                </article>
+
+                <!-- 衛教 3 -->
+                <article class="glass-card rounded-3xl overflow-hidden shadow-soft hover:shadow-dreamy transition-all duration-300 flex flex-col">
+                    <div class="h-48 bg-gradient-to-r from-purple-200 via-pink-200 to-pink-300 flex items-center justify-center relative">
+                        <i class="fa-solid fa-comments text-6xl text-white/80"></i>
+                        <span class="absolute bottom-3 left-4 bg-white/80 backdrop-blur-sm text-pink-500 text-xs font-bold px-3 py-1 rounded-full">心靈溝通</span>
+                    </div>
+                    <div class="p-6 flex-1 flex flex-col justify-between">
+                        <div class="space-y-3">
+                            <h3 class="text-xl font-bold text-dreamy-dark">3. 傾聽毛孩的心靈語言：解讀肢體訊號</h3>
+                            <p class="text-sm text-dreamy-text leading-relaxed">
+                                貓咪舔嘴唇、狗狗打哈欠可能不是困了，而是代表壓力或緊張！學會閱讀毛孩的細微肢體語言，能在牠們焦慮時給予最即時的溫暖擁抱與安全感。
+                            </p>
+                        </div>
+                        <div class="pt-4 border-t border-pink-100 mt-4 text-xs font-semibold text-pink-400">
+                            💡 小撇步：平時多觀察眼睛表情與尾巴擺動頻率，能更懂牠的心。
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <!-- 聯絡我們 區塊 -->
+        <section id="contact" class="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+            <div class="glass-card rounded-3xl p-8 sm:p-12 shadow-dreamy border border-pink-200">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                    
+                    <!-- 聯絡資訊細節 -->
+                    <div class="space-y-8">
+                        <div>
+                            <span class="px-4 py-1.5 rounded-full bg-pink-100 text-pink-500 font-medium text-sm">
+                                <i class="fa-solid fa-location-dot"></i> Contact Us
+                            </span>
+                            <h2 class="text-3xl sm:text-4xl font-bold text-dreamy-dark mt-3">預約夢幻極致照護</h2>
+                            <p class="text-dreamy-text mt-2">有任何服務需求或問題，歡迎隨時與 pawtw 聯繫！</p>
+                        </div>
+
+                        <div class="space-y-4">
+                            <div class="flex items-center gap-4 p-4 rounded-2xl bg-white/60 border border-pink-100">
+                                <div class="w-12 h-12 rounded-full bg-pink-400 text-white flex items-center justify-center text-xl shadow-sm">
+                                    <i class="fa-solid fa-phone"></i>
+                                </div>
+                                <div>
+                                    <div class="text-xs text-gray-500 font-medium">聯絡電話 / 預約專線</div>
+                                    <a href="tel:0912345678" class="text-lg font-bold text-pink-500 hover:underline">0912345678</a>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center gap-4 p-4 rounded-2xl bg-white/60 border border-pink-100">
+                                <div class="w-12 h-12 rounded-full bg-pink-400 text-white flex items-center justify-center text-xl shadow-sm">
+                                    <i class="fa-solid fa-map-location-dot"></i>
+                                </div>
+                                <div>
+                                    <div class="text-xs text-gray-500 font-medium">工作室地址</div>
+                                    <div class="text-lg font-bold text-dreamy-dark">台南市中西區粉羽夢幻路 520 號</div>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center gap-4 p-4 rounded-2xl bg-white/60 border border-pink-100">
+                                <div class="w-12 h-12 rounded-full bg-pink-400 text-white flex items-center justify-center text-xl shadow-sm">
+                                    <i class="fa-solid fa-clock"></i>
+                                </div>
+                                <div>
+                                    <div class="text-xs text-gray-500 font-medium">營業時間</div>
+                                    <div class="text-sm font-bold text-dreamy-dark">週二至週日 10:00 - 19:00 (週一公休)</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center gap-4">
+                            <span class="text-sm font-bold text-dreamy-dark">關注我們的粉專：</span>
+                            <a href="#" class="w-10 h-10 rounded-full bg-pink-100 text-pink-500 flex items-center justify-center hover:bg-pink-500 hover:text-white transition-colors"><i class="fa-brands fa-instagram text-lg"></i></a>
+                            <a href="#" class="w-10 h-10 rounded-full bg-pink-100 text-pink-500 flex items-center justify-center hover:bg-pink-500 hover:text-white transition-colors"><i class="fa-brands fa-facebook-f text-lg"></i></a>
+                            <a href="#" class="w-10 h-10 rounded-full bg-pink-100 text-pink-500 flex items-center justify-center hover:bg-pink-500 hover:text-white transition-colors"><i class="fa-brands fa-line text-lg"></i></a>
+                        </div>
+                    </div>
+
+                    <!-- 表單 -->
+                    <div class="bg-white/80 p-8 rounded-3xl border border-pink-200 shadow-soft">
+                        <h3 class="text-xl font-bold text-dreamy-dark mb-6">線上諮詢與預約</h3>
+                        <form id="contactForm" class="space-y-4" onsubmit="handleFormSubmit(event)">
+                            <div>
+                                <label class="block text-sm font-medium text-dreamy-dark mb-1">您的姓名</label>
+                                <input type="text" required placeholder="請輸入姓名" class="w-full px-4 py-2.5 rounded-xl border border-pink-200 focus:outline-none focus:ring-2 focus:ring-pink-400 text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-dreamy-dark mb-1">聯絡電話</label>
+                                <input type="tel" required placeholder="請輸入電話號碼" class="w-full px-4 py-2.5 rounded-xl border border-pink-200 focus:outline-none focus:ring-2 focus:ring-pink-400 text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-dreamy-dark mb-1">預約服務項目</label>
+                                <select class="w-full px-4 py-2.5 rounded-xl border border-pink-200 focus:outline-none focus:ring-2 focus:ring-pink-400 text-sm text-dreamy-dark">
+                                    <option>基礎美容與洗沐</option>
+                                    <option>服從訓練</option>
+                                    <option>寵物寫真攝影</option>
+                                    <option>心靈寵物溝通</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-dreamy-dark mb-1">備註訊息 (毛孩品種、年齡等)</label>
+                                <textarea rows="3" placeholder="請填寫毛孩相關資訊..." class="w-full px-4 py-2.5 rounded-xl border border-pink-200 focus:outline-none focus:ring-2 focus:ring-pink-400 text-sm"></textarea>
+                            </div>
+                            <button type="submit" class="w-full py-3 rounded-xl bg-gradient-to-r from-pink-400 to-pink-500 text-white font-bold shadow-soft hover:shadow-dreamy transition-all duration-300">
+                                送出預約申請
+                            </button>
+                        </form>
+                        <div id="formSuccess" class="hidden mt-4 p-3 bg-pink-100 text-pink-600 rounded-xl text-center text-xs font-bold">
+                            ✨ 預約訊息已順利送出！我們將有專人盡快電話與您聯繫安排時間。
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- 頁尾 -->
+    <footer class="glass-nav border-t border-pink-200 py-8 text-center text-xs text-dreamy-text relative z-10">
+        <div class="max-w-7xl mx-auto px-4 space-y-3">
+            <div class="flex justify-center items-center gap-2 font-bold text-pink-500 text-base">
+                <i class="fa-solid fa-feather-pointed"></i> pawtw 寵物美學工作室
+            </div>
+            <p>台南市中西區粉羽夢幻路 520 號 | 預約專線：0912345678</p>
+            <p class="text-gray-400">© 2026 pawtw Pet Aesthetic Studio. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript 邏輯 -->
+    <script>
+        // 手機版選單切換
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // 飄落羽毛動畫生成
+        function createFeathers() {
+            const container = document.getElementById('featherContainer');
+            const featherCount = 12; // 飄落數量
+
+            for (let i = 0; i < featherCount; i++) {
+                const feather = document.createElement('div');
+                feather.className = 'feather';
+                
+                // 隨機尺寸
+                const size = Math.random() * 18 + 10;
+                feather.style.width = `${size}px`;
+                feather.style.height = `${size * 1.5}px`;
+
+                // 隨機水平位置
+                feather.style.left = `${Math.random() * 100}%`;
+
+                // 隨機動畫時間與延遲
+                const duration = Math.random() * 8 + 7;
+                const delay = Math.random() * 5;
+                feather.style.animationDuration = `${duration}s`;
+                feather.style.animationDelay = `${delay}s`;
+
+                container.appendChild(feather);
+            }
+        }
+
+        // 1. 寵物年齡換算邏輯
+        function calculateAge() {
+            const petType = document.querySelector('input[name="petType"]:checked').value;
+            const age = parseFloat(document.getElementById('petAge').value);
+            
+            if (isNaN(age) || age <= 0) return;
+
+            let humanAge = 0;
+            let advice = '';
+
+            if (petType === 'dog') {
+                if (age <= 1) {
+                    humanAge = Math.round(age * 15);
+                } else if (age <= 2) {
+                    humanAge = 24;
+                } else {
+                    humanAge = Math.round(24 + (age - 2) * 5);
+                }
+
+                if (humanAge < 18) advice = '相當於青少年的活潑階段，最適合進行行為服從訓練！';
+                else if (humanAge <= 45) advice = '正是精力充沛、活潑好動的黃金青壯年期呢！';
+                else if (humanAge <= 60) advice = '步入成熟穩重期，記得多注意關節與飲食營養平衡。';
+                else advice = '寶貝已經是慈祥的高齡長者囉，需要更多溫柔呵護與關懷。';
+
+            } else { // 貓咪
+                if (age <= 1) {
+                    humanAge = Math.round(age * 15);
+                } else if (age <= 2) {
+                    humanAge = 24;
+                } else {
+                    humanAge = Math.round(24 + (age - 2) * 4);
+                }
+
+                if (humanAge < 18) advice = '好奇心爆棚的小幼貓階段，精力超級旺盛！';
+                else if (humanAge <= 45) advice = '活力充沛的成年貓咪，享受充滿好奇與優雅的每一天。';
+                else if (humanAge <= 60) advice = '穩重優雅的中年期，適度玩耍與規律體檢很重要喔！';
+                else advice = '高齡貓寶貝，請給予最溫暖安靜的休息環境與寵愛。';
+            }
+
+            document.getElementById('humanAgeOutput').textContent = humanAge;
+            document.getElementById('ageAdvice').textContent = advice;
+            document.getElementById('ageResult').classList.remove('hidden');
+        }
+
+        // 2. 寵物 BMI 計算邏輯 (體重 / (身長m)^2 概算)
+        function calculateBMI() {
+            const lengthCm = parseFloat(document.getElementById('petLength').value);
+            const weightKg = parseFloat(document.getElementById('petWeight').value);
+
+            if (isNaN(lengthCm) || isNaN(weightKg) || lengthCm <= 0 || weightKg <= 0) return;
+
+            const lengthM = lengthCm / 100;
+            const bmi = (weightKg / (lengthM * lengthM)).toFixed(1);
+
+            const scoreEl = document.getElementById('bmiScore');
+            const badgeEl = document.getElementById('bmiStatusBadge');
+            const adviceEl = document.getElementById('bmiAdvice');
+
+            scoreEl.textContent = bmi;
+
+            // 依 BMI 數值簡單評估
+            if (bmi < 18.5) {
+                badgeEl.textContent = '體型偏瘦';
+                badgeEl.className = 'inline-block px-3 py-1 rounded-full text-xs font-bold mt-2 mb-2 bg-amber-100 text-amber-600';
+                adviceEl.textContent = '寶貝有點偏瘦囉！可以適度補充優質蛋白質與營養鮮食！';
+            } else if (bmi >= 18.5 && bmi <= 25.5) {
+                badgeEl.textContent = '體型標準健康';
+                badgeEl.className = 'inline-block px-3 py-1 rounded-full text-xs font-bold mt-2 mb-2 bg-emerald-100 text-emerald-600';
+                adviceEl.textContent = '狀態非常棒！請繼續保持均衡飲食與定時運動習慣喔！';
+            } else {
+                badgeEl.textContent = '體型偏豐滿';
+                badgeEl.className = 'inline-block px-3 py-1 rounded-full text-xs font-bold mt-2 mb-2 bg-rose-100 text-rose-600';
+                adviceEl.textContent = '寶貝稍微過重囉！可以多安排服從訓練或外出一同散步運動！';
+            }
+
+            document.getElementById('bmiResult').classList.remove('hidden');
+        }
+
+        // 表單提交處理
+        function handleFormSubmit(e) {
+            e.preventDefault();
+            const successEl = document.getElementById('formSuccess');
+            successEl.classList.remove('hidden');
+            e.target.reset();
+            setTimeout(() => {
+                successEl.classList.add('hidden');
+            }, 4000);
+        }
+
+        // 初始化
+        window.onload = function() {
+            createFeathers();
+        };
+    </script>
+</body>
+</html>
